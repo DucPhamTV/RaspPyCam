@@ -46,10 +46,11 @@ if __name__ == "__main__" :
     logger.info(args)
     camera = cv2.VideoCapture(port)
     circular = Circular(threshold=circular_size)
+
     while (cv2.waitKey(1) & 0xFF != ord('q')):
         time.sleep(interval)
         image_data = get_image(camera, ramp_frames)
         image = ImageCaptured(image_data, storage)
-        image.save_image()
+        image.save_image(circular)
         circular.check_and_clean()
 

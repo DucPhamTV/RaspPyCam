@@ -1,7 +1,17 @@
-import datetime
-import time
 import cv2
+import datetime
+import logging
+import time
 import os
+
+logger = logging.getLogger(__name__)
+
+formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s')
+file_handler = logging.FileHandler('image.log')
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+logger.setLevel(logging.DEBUG)
 
 def get_image(camera, ramp_frames=10):
     for i in range(ramp_frames):
@@ -10,7 +20,6 @@ def get_image(camera, ramp_frames=10):
     retval, im = camera.read()
     if retval == False:
         return -1
-    print(len(im))
     return im
 
 class ImageCaptured:
@@ -22,16 +31,24 @@ class ImageCaptured:
         self.date_path = ""
         self.hour_path = ""
         self.image_name = ""
+        self.size = len(data)
 
-    def save_image(self):
+    def save_image(self, circular):
         self._filename_from_time()
         file_location = os.path.join(self.storage, self.date_path, self.hour_path)
         file_name = os.path.join(file_location, self.image_name)
-        print(file_name)
+        logger.debug("saving image %s" % file_name)
         if not os.path.isdir(file_location):
-            print("haven't created this path yet")
+            logger.warn("haven't created %s yet" % file_location)
             os.makedirs(file_location)
-        return cv2.imwrite(file_name, self.data)
+
+        try:
+            cv2.imwrite(file_name, self.data)
+        except Exception as e:
+            logger.error("{0} Write to storage error! "
+                         "file_name {1}".format(e, file_name))
+        else:
+            circular.update(file_location)
 
     def _filename_from_time(self):
         ''' timestamp to date and time
@@ -41,7 +58,6 @@ class ImageCaptured:
             file-name format: hh_mm_ss.png
         :return: retval
         '''
-        print(self.timestamp)
         date_time = datetime.datetime.fromtimestamp(self.timestamp)
         hour = date_time.hour
         date_time_str = date_time.strftime('%Y_%m_%d %H_%M_%S')
