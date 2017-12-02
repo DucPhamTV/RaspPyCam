@@ -14,9 +14,7 @@ if __name__ == "__main__" :
     while (cv2.waitKey(1) & 0xFF != ord('q')):
         time.sleep(1)
         image_data = get_image(camera, int(ramp_frames))
-        time_now = time.time()
-        image = ImageCaptured(image_data, time_now, storage)
-        image.filename_from_time()
+        image = ImageCaptured(image_data, storage)
         image.save_image()
         circular.check_and_clean()
 

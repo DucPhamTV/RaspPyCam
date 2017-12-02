@@ -1,4 +1,5 @@
 import datetime
+import time
 import cv2
 import os
 
@@ -14,15 +15,16 @@ def get_image(camera, ramp_frames=10):
 
 class ImageCaptured:
 
-    def __init__(self, data, time, storage):
+    def __init__(self, data, storage):
         self.data = data
-        self.timestamp = time
+        self.timestamp = time.time()
         self.storage = storage
         self.date_path = ""
         self.hour_path = ""
         self.image_name = ""
 
     def save_image(self):
+        self._filename_from_time()
         file_location = os.path.join(self.storage, self.date_path, self.hour_path)
         file_name = os.path.join(file_location, self.image_name)
         print(file_name)
@@ -31,13 +33,12 @@ class ImageCaptured:
             os.makedirs(file_location)
         return cv2.imwrite(file_name, self.data)
 
-    def filename_from_time(self):
+    def _filename_from_time(self):
         ''' timestamp to date and time
             A date with 1 dir, in a day, we seperate to 24 hours is 24 dirs
             date directory: dd_mm_yy
             time directory: <hour> (in 24 hours)
             file-name format: hh_mm_ss.png
-        :param time_stamp: at the time image is captured
         :return: retval
         '''
         print(self.timestamp)

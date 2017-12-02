@@ -17,7 +17,7 @@ class Circular:
             return 0
         if (os.path.isdir(self.list_dir[0])):
             shutil.rmtree(self.list_dir[0])
-            return 1
+            return 0
         print("Can't find any dir in list")
         del self.list_dir[0]
-        return -1
+        return 1
