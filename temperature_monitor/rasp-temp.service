@@ -1,0 +1,16 @@
+[Unit]
+Description=Raspberry Pi temperature monitor service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=ubuntu
+StartLimitBurst=5
+StartLimitIntervalSec=10
+ExecStart=
+
+[Install]
+WantedBy=multi-user.target
