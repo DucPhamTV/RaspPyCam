@@ -2,6 +2,7 @@ import os
 import time
 
 import settings as cfg
+from log import init_log
 
 
 # how often the script reads from temperature file
@@ -13,6 +14,7 @@ RESULT_FILE = os.getenv("RESULT_FILE", "/var/www/html/temperature.html")
 
 
 if __name__ == "__main__":
+    log = init_log(cfg.LOG_LEVEL)
     counter = 0
     with open(cfg.RESULT_FILE, 'a') as writer:
         while True:
@@ -22,10 +24,10 @@ if __name__ == "__main__":
                     text = reader.read()
                     temperature = int(text.strip())
                 except Exception as e:
-                    print(f"Exception : {e}")
+                    log.error(f"Exception : {e}")
 
             writer.write(f"<h3>{temperature}<h3>")
             counter += 1
             if counter % (cfg.WRITE_INTERVAL // cfg.READ_INTERVAL) == 0:
-                print(f"Flushing...{counter}")
+                log.info(f"Write new report...{counter}")
                 writer.flush()
