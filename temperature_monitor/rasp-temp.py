@@ -1,16 +1,10 @@
+#!/usr/bin/python3
 import os
 import time
 
 import settings as cfg
 from log import init_log
 
-
-# how often the script reads from temperature file
-READ_INTERVAL = os.getenv("READ_INTERVAL", 2)
-# how often the script updates to temperature result file
-WRITE_INTERVAL = os.getenv("WRITE_INTERVAL", 10)
-# teperature result file
-RESULT_FILE = os.getenv("RESULT_FILE", "/var/www/html/temperature.html")
 
 
 if __name__ == "__main__":
