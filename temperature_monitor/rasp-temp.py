@@ -14,7 +14,7 @@ RESULT_FILE = os.getenv("RESULT_FILE", "/var/www/html/temperature.html")
 
 
 if __name__ == "__main__":
-    log = init_log(cfg.LOG_LEVEL)
+    log = init_log(log_name="Main", log_level=cfg.LOG_LEVEL)
     counter = 0
     with open(cfg.RESULT_FILE, 'a') as writer:
         while True:
